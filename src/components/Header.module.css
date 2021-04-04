@@ -1,0 +1,9 @@
+.header{
+    grid-row:1/1;
+    grid-column: 2/5;
+    background-color: green;
+  }
+  .header img{
+    height:50%;
+    width:20%;
+  }
