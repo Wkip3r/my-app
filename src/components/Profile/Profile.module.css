@@ -3,11 +3,10 @@
     grid-column: 3/5;
     background-color: aliceblue;
   }
-  
   .content img{
-    height: 30%;
     width:100%;
   }
+  
   .posts{
     
   }
