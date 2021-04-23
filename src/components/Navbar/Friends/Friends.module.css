@@ -1,0 +1,7 @@
+.friends{
+    margin-top: 60px;
+}
+.friendsItem{
+    display: flex;
+    flex-direction: row;
+}

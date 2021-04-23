@@ -1,10 +1,11 @@
+.profileInfo{
+    position: relative;
+}
 .content{
-    grid-row: 2/5;
-    grid-column: 3/5;
     background-color: aliceblue;
   }
-  .content img{
-    width:100%;
+  .img{
+      width:100%;
   }
   
   .posts{
@@ -12,4 +13,21 @@
   }
   .item{
     color:yellow;
+  }
+  .aboutMe{
+      font-weight: 600;
+  }
+  .profileImg{
+      width:50%;
+      height:50%;
+  }
+  .fullName{
+      position: absolute;
+      top:0;
+      right:0;
+  }
+  .jobSearch{
+      position: absolute;
+      bottom: 0;
+      right: 0;
   }

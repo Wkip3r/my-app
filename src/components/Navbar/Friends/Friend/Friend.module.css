@@ -1,0 +1,9 @@
+.friendItem{
+    margin-left: 10px;
+}
+.ava{
+    background-color: red;
+    height: 40px;
+    width:40px;
+    border-radius: 50%;
+}

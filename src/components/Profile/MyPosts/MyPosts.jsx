@@ -1,19 +1,35 @@
 import s from './MyPosts.module.css'
 import Post from './Post/Post'
+import * as React from "react";
 
-const MyPosts = () => {
+
+const MyPosts = (props) => {
+    let postElements = props.state.postsData.map((item, index) => <Post key={index} message={item.message}
+                                                                  likesCount={item.likesCount}/>)
+
+    let newPostElement = React.createRef();
+
+
+    const onAddPost = () => {
+        props.addPost()
+    }
+
+    const onPostChange = () => {
+        let text = newPostElement.current.value
+        props.onPostChange(text)
+    }
+
     return (
-        <div>
+        <div className={s.myPosts}>
             <div>
-            My posts
+                My posts
             </div>
             <div>
-                <textarea></textarea>
-                <button>Add Post</button>
+                <textarea ref={newPostElement} onChange={onPostChange} value={props.state.newPostText}/>
+                <button onClick={onAddPost}>Add Post</button>
             </div>
             <div className={s.posts}>
-                <Post login='Ivan' message='Hi, how are you?' />
-                <Post login="Petr" message='It my first post' />
+                {postElements}
             </div>
         </div>
     )

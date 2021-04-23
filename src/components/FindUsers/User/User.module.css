@@ -1,0 +1,45 @@
+.user{
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+}
+.logo{
+    flex:1;
+}
+.userWrapper{
+    position: relative;
+    flex:5;
+    border: 2px solid #c3acac;
+    border-radius: 4px;
+}
+
+.button{
+    border-radius: 10px;
+}
+
+.user img{
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+.name{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+
+}
+.description{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+.country{
+    position: absolute;
+    right: 0px;
+    top:0px;
+}
+.city{
+    position: absolute;
+    right: 0px;
+    bottom:0px;
+}
