@@ -1,0 +1,8 @@
+.findUsers{
+    margin: 40px;
+}
+
+.selectedPage{
+    font-weight: bold;
+    color: red;
+}

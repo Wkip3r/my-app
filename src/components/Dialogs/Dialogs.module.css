@@ -1,0 +1,33 @@
+.dialogs{
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+
+}
+
+.dialogsItems{
+    padding: 10px;
+}
+
+.dialogsItems .active{
+    color:gold;
+}
+
+.dialog{
+
+}
+.messages{
+    padding: 10px;
+    flex: 1;
+    background-color: beige;
+}
+
+.messagesNotUser{
+    flex:1;
+    margin-left: 80%;
+    background-color: aqua;
+}
+.messages img{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+}
