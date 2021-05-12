@@ -1,9 +1,12 @@
-import {usersAPI} from "../api/api";
+import {profileAPI, usersAPI} from "../api/api";
 
 const ADD_POST = "ADD_POST"
 const UPDATE_NEW_POST_TEXT = 'UPDATE_NEW_POST_TEXT'
 const TOGGLE_FETCHING = "TOGGLE_FETCHING"
 const SET_USER_PROFILE = "SET_USER_PROFILE"
+const EDIT_STATUS = "EDIT_STATUS"
+const SET_STATUS = "SET_STATUS"
+const DELETE_POST = "DELETE_POST"
 
 let initialState = {
     postsData:
@@ -15,36 +18,50 @@ let initialState = {
             {id: 5, message: "Ant Design", likesCount: "45"},
         ],
     profile: null,
-    newPostText: "text from state",
-    isFetching: false
+    isFetching: false,
+    isEditStatus: false,
+    status: 'Edit Status'
 }
 
-
-const profileReducer = (state = initialState,action) => {
-    switch (action.type){
+const profileReducer = (state = initialState, action) => {
+    switch (action.type) {
         case ADD_POST:
-            return {
-                ...state,
-                postsData: [...state.postsData,{id: 5, message: state.newPostText, likesCount: 0}],
-                newPostText: ""
-            }
-            break;
+            return (
+                {
+                    ...state,
+                    postsData:
+                        [
+                            ...state.postsData,
+                            {
+                                id: ++state.postsData[state.postsData.length - 1].id,
+                                message: action.text,
+                                likesCount: 0
+                            }
+                        ]
+                })
         case UPDATE_NEW_POST_TEXT:
             return {
                 ...state,
                 newPostText: action.text
             }
-            break;
         case TOGGLE_FETCHING:
             return {
                 ...state,
                 isFetching: !state.isFetching
             }
         case SET_USER_PROFILE:
-            return  {...state, profile: action.profile}
+            return {...state, profile: action.profile}
+        case EDIT_STATUS:
+            return {...state, isEditStatus: !state.isEditStatus}
+        case SET_STATUS:
+            return {...state, status: action.status}
+        case DELETE_POST:
+            return {
+                ...state,
+                postsData: state.postsData.filter(post => post.id !== action.id)
+            }
     }
     return state
-
 }
 
 export const setUserProfile = (profile) => ({
@@ -52,24 +69,40 @@ export const setUserProfile = (profile) => ({
     profile: profile
 })
 
-export const addPostActionCreator = () => ({type: ADD_POST})
-
-export const updateNewPostTextActionCreator = (text) => ({
-    type: UPDATE_NEW_POST_TEXT,
-    text: text
+export const setStatus = (status) => ({
+    type: SET_STATUS,
+    status: status
 })
 
-export const onToggleFetchingAC = (isFetching) => ({
-    type: TOGGLE_FETCHING,
-    isFetching: isFetching
+export const getStatus = (userId) => async (dispatch) => {
+    let response = await profileAPI.getStatus(userId)
+
+    dispatch(setStatus(response.data))
+}
+
+export const addPostActionCreator = (postText) => ({
+    type: ADD_POST,
+    text: postText
 })
 
-export const setUserProfileThunk = (userId) => {
-    return (dispatch) => {
-        usersAPI.setUserProfile(userId).then(response => {
-            dispatch(setUserProfile(response))
-        })
-    }
+export const deletePostActionCreator = (postId) => ({
+    type: DELETE_POST,
+    id: postId
+})
+
+export const editStatus = (isEdit) => ({
+    type: EDIT_STATUS,
+    isEdit: isEdit
+})
+
+export const updateStatus = (status) => async (dispatch) => {
+    let response = await profileAPI.updateStatus(status)
+    dispatch(setStatus(status))
+}
+
+export const setUserProfileThunk = (userId) => async (dispatch) => {
+    let response = await usersAPI.setUserProfile(userId)
+    dispatch(setUserProfile(response))
 }
 
 export default profileReducer

@@ -1,17 +1,7 @@
-const ADD_MESSAGE = "ADD_MESSAGE"
-const UPDATE_NEW_MESSAGE_TEXT = 'UPDATE_NEW_MESSAGE_TEXT'
+import dialogsReducer, {deleteMessage} from "./dialogsReducer";
 
+let state = {
 
-let initialState = {
-    dialogsData:
-        [
-            {id: 1, name: "Dmitriy"},
-            {id: 2, name: "Oleg"},
-            {id: 3, name: "Andrei"},
-            {id: 4, name: "Ivan"},
-            {id: 5, name: "Sasha"},
-
-        ],
     messagesData:
         [
             {
@@ -45,42 +35,13 @@ let initialState = {
                 avatarLink: "https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380"
             },
         ],
-    newMessageText: "hey hey"
+
 }
 
-const dialogsReducer = (state = initialState, action) => {
+test('after deleting message messageData should be decrement', () => {
+    let action = deleteMessage(1)
 
-    switch (action.type) {
-        case ADD_MESSAGE:
-            return {
-                ...state,
-                messagesData:
-                    [
-                        ...state.messagesData,
-                        {
-                            id: 6,
-                            isUser: true,
-                            message: action.text,
-                            avatarLink: "https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380"
-                        }
-                    ],
-                newMessageText: ""
-            }
+    let newState = dialogsReducer(state,action)
 
-            break;
-        case UPDATE_NEW_MESSAGE_TEXT:
-            return {
-                ...state,
-                newMessageText: action.text
-            }
-            break;
-    }
-    return state
-}
-
-export const addMessage = (messageText) => ({
-    type: ADD_MESSAGE,
-    text: messageText
-})
-
-export default dialogsReducer
+    expect(newState.messagesData.length).toBe(state.messagesData.length - 1)
+});

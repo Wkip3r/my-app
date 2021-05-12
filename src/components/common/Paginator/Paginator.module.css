@@ -1,0 +1,14 @@
+.paginator {
+    height: 20px;
+}
+.selectedPage{
+
+}
+.pageNumber{
+
+}
+.page{
+    border: 1px solid black;
+    margin: 2px;
+    background-color: rgb(168, 152, 152);
+}

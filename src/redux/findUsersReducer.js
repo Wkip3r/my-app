@@ -85,36 +85,30 @@ export const toggleIsFollowingProgress = (followingInProgress, userId) => ({
     userId: userId
 })
 
-export const getUsers = (currentPage, pageSize) => {
-    return (dispatch) => {
-        dispatch(fetching(true))
-        usersAPI.getUsers(currentPage, pageSize).then(data => {
-            dispatch(setCurrentPageActionCreator(currentPage))
-            dispatch(fetching(false))
-            dispatch(setUsersActionCreator(data.items))
-            dispatch(setTotalUserCount(data.totalCount))
-        })
-    }
+export const getUsers = (currentPage, pageSize) => async (dispatch) => {
+    dispatch(fetching(true))
+    let data = await usersAPI.getUsers(currentPage, pageSize)
+
+    dispatch(setCurrentPageActionCreator(currentPage))
+    dispatch(fetching(false))
+    dispatch(setUsersActionCreator(data.items))
+    dispatch(setTotalUserCount(data.totalCount))
 }
 
-export const follow = (userId) => {
-    return (dispatch) => {
-        dispatch(toggleIsFollowingProgress(true,userId))
-        usersAPI.followUser(userId).then(response => {
-            dispatch(toggleIsFollowingProgress(false,userId))
-            dispatch(onToggleFollow(userId))
-        })
-    }
+export const follow = (userId) => async (dispatch) => {
+    dispatch(toggleIsFollowingProgress(true, userId))
+    let response = await usersAPI.followUser(userId)
+
+    dispatch(toggleIsFollowingProgress(false, userId))
+    dispatch(onToggleFollow(userId))
 }
 
-export const unfollow = (userId) => {
-    return (dispatch) => {
-        dispatch(toggleIsFollowingProgress(true,userId))
-        usersAPI.unFollowUser(userId).then(response => {
-            dispatch(toggleIsFollowingProgress(false,userId))
-            dispatch(onToggleFollow(userId))
-        })
-    }
+export const unfollow = (userId) => async (dispatch) => {
+    dispatch(toggleIsFollowingProgress(true, userId))
+    let response = usersAPI.unFollowUser(userId)
+
+    dispatch(toggleIsFollowingProgress(false, userId))
+    dispatch(onToggleFollow(userId))
 }
 
 export default findUsersReducer

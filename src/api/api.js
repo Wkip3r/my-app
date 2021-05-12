@@ -8,15 +8,33 @@ const instance = axios.create({
     }
 })
 
+export const authAPI = {
+    login(formData){
+        return instance.post(`auth/login`,{
+            email: formData.email,
+            password: formData.password,
+            rememberMe: formData.rememberMe || false,
+        })
+            .then(response => response)
+            .catch(err => new Error(err))
+    },
+
+    logout(){
+        return instance.delete(`auth/login`)
+    }
+}
+
 export const usersAPI = {
     getUsers(currentPage = 1, pageSize = 10) {
-        return instance.get(`users?page=${currentPage}&count=${pageSize}`).then(response => response.data)
+        return instance.get(`users?page=${currentPage}&count=${pageSize}`)
+                        .then(response => response.data)
+                        .catch(err => new Error(err))
     },
     setAuthUser() {
         return instance.get(`auth/me`)
     },
     followUser(userId) {
-        return instance.post(`https://social-network.samuraijs.com/api/1.0/follow/${userId}`, {})
+        return instance.post(`follow/${userId}`, {})
             .then(response => {
                 if (response.data.resultCode === 0) {
                     return response.data
@@ -25,7 +43,7 @@ export const usersAPI = {
             .catch(err => new Error(err))
     },
     unFollowUser(userId) {
-        return instance.delete(`https://social-network.samuraijs.com/api/1.0/follow/${userId}`, {})
+        return instance.delete(`follow/${userId}`, {})
             .then(response => {
                 if (response.data.resultCode === 0) {
                     return response.data
@@ -34,11 +52,28 @@ export const usersAPI = {
             .catch(err => new Error(err))
     },
     setUserProfile(userId){
-        return axios.get(`https://social-network.samuraijs.com/api/1.0/profile/${userId}`)
+        return instance.get(`profile/${userId}`)
             .then(response => {
                 return response.data
             })
+            .catch(err => new Error(err))
     },
+}
+
+export const profileAPI = {
+    getProfile(userId) {
+        return instance.get("profile/" + userId)
+    },
+
+    getStatus(userId) {
+        return instance.get("profile/status/" + userId)
+    },
+
+    updateStatus(status){
+        return instance.put('profile/status/', {
+            status: status
+        })
+    }
 }
 
 

@@ -1,13 +1,6 @@
-import {profileAPI, usersAPI} from "../api/api";
+import profileReducer, {addPostActionCreator, deletePostActionCreator} from "./profileReducer";
 
-const ADD_POST = "ADD_POST"
-const UPDATE_NEW_POST_TEXT = 'UPDATE_NEW_POST_TEXT'
-const TOGGLE_FETCHING = "TOGGLE_FETCHING"
-const SET_USER_PROFILE = "SET_USER_PROFILE"
-const EDIT_STATUS = "EDIT_STATUS"
-const SET_STATUS = "SET_STATUS"
-
-let initialState = {
+let state = {
     postsData:
         [
             {id: 1, message: "Hi, how are you?", likesCount: "20"},
@@ -16,87 +9,34 @@ let initialState = {
             {id: 4, message: "GraphQL", likesCount: "34"},
             {id: 5, message: "Ant Design", likesCount: "45"},
         ],
-    profile: null,
-    isFetching: false,
-    isEditStatus: false,
-    status: 'Edit Status'
+
 }
 
-const profileReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case ADD_POST:
-            return (
-                {
-                    ...state,
-                    postsData:
-                        [
-                            ...state.postsData,
-                            {
-                                id: ++state.postsData[state.postsData.length - 1].id,
-                                message: action.text,
-                                likesCount: 0
-                            }
-                        ]
-                })
-        case UPDATE_NEW_POST_TEXT:
-            return {
-                ...state,
-                newPostText: action.text
-            }
-        case TOGGLE_FETCHING:
-            return {
-                ...state,
-                isFetching: !state.isFetching
-            }
-        case SET_USER_PROFILE:
-            return {...state, profile: action.profile}
-        case EDIT_STATUS:
-            return {...state, isEditStatus: !state.isEditStatus}
-        case SET_STATUS:
-            return {...state, status: action.status}
-    }
-    return state
-}
 
-export const setUserProfile = (profile) => ({
-    type: SET_USER_PROFILE,
-    profile: profile
-})
+test('length of post should be incremented', () => {
+    let action = addPostActionCreator("Samurai")
 
-export const setStatus = (status) => ({
-    type: SET_STATUS,
-    status: status
-})
+    let newState = profileReducer(state,action)
 
-export const getStatus = (userId) => (dispatch) => {
-    profileAPI.getStatus(userId)
-        .then(response => {
-            dispatch(setStatus(response.data))
-        })
-}
 
-export const addPostActionCreator = (postText) => ({
-    type: ADD_POST,
-    text: postText
-})
+    expect(newState.postsData.length).toBe(6)
 
-export const editStatus = (isEdit) => ({
-    type: EDIT_STATUS,
-    isEdit: isEdit
-})
+});
 
-export const updateStatus = (status) => (dispatch) => {
-    profileAPI.updateStatus(status).then(response => {
-        dispatch(setStatus(status))
-    })
-}
+test('message of new post should be corrected', () => {
+    let action = addPostActionCreator("Samurai")
 
-export const setUserProfileThunk = (userId) => {
-    return (dispatch) => {
-        usersAPI.setUserProfile(userId).then(response => {
-            dispatch(setUserProfile(response))
-        })
-    }
-}
+    let newState = profileReducer(state,action)
 
-export default profileReducer
+    expect(newState.postsData[newState.postsData.length - 1].message).toBe("Samurai")
+});
+
+test('after deleting length of messages should be decrement', () => {
+    let action = deletePostActionCreator(2)
+
+    let newState = profileReducer(state,action)
+
+    expect(newState.postsData.length).toBe(state.postsData.length - 1)
+});
+
+
