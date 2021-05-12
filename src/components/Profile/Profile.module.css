@@ -1,33 +1,40 @@
-.profileInfo{
+.profileInfo {
     position: relative;
 }
-.content{
+
+.content {
     background-color: aliceblue;
-  }
-  .img{
-      width:100%;
-  }
-  
-  .posts{
-    
-  }
-  .item{
-    color:yellow;
-  }
-  .aboutMe{
-      font-weight: 600;
-  }
-  .profileImg{
-      width:50%;
-      height:50%;
-  }
-  .fullName{
-      position: absolute;
-      top:0;
-      right:0;
-  }
-  .jobSearch{
-      position: absolute;
-      bottom: 0;
-      right: 0;
-  }
+}
+
+.img {
+    width: 100%;
+}
+
+.posts {
+
+}
+
+.item {
+    color: yellow;
+}
+
+.aboutMe {
+    font-weight: 600;
+}
+
+.profileImg {
+    width: 50%;
+    height: 50%;
+}
+
+.fullName {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.jobSearch {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

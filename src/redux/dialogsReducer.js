@@ -1,5 +1,6 @@
 const ADD_MESSAGE = "ADD_MESSAGE"
 const UPDATE_NEW_MESSAGE_TEXT = 'UPDATE_NEW_MESSAGE_TEXT'
+const DELETE_MESSAGE = "DELETE_MESSAGE"
 
 
 let initialState = {
@@ -54,7 +55,16 @@ const dialogsReducer = (state = initialState, action) => {
         case ADD_MESSAGE:
             return {
                 ...state,
-                messagesData: [...state.messagesData,{id: 6, isUser: true, message: state.newMessageText, avatarLink: "https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380"}],
+                messagesData:
+                    [
+                        ...state.messagesData,
+                        {
+                            id: 6,
+                            isUser: true,
+                            message: action.text,
+                            avatarLink: "https://avatars.mds.yandex.net/get-ott/374297/2a000001616b87458162c9216ccd5144e94d/678x380"
+                        }
+                    ],
                 newMessageText: ""
             }
 
@@ -65,15 +75,23 @@ const dialogsReducer = (state = initialState, action) => {
                 newMessageText: action.text
             }
             break;
+        case DELETE_MESSAGE:
+            return {
+                ...state,
+                messagesData: state.messagesData.filter(message => message.id !== action.id)
+            }
     }
     return state
 }
 
-export const addMessage = () => ({type: ADD_MESSAGE})
+export const addMessage = (messageText) => ({
+    type: ADD_MESSAGE,
+    text: messageText
+})
 
-export const onChangeText = (text) => ({
-    type: UPDATE_NEW_MESSAGE_TEXT,
-    text: text
+export const deleteMessage = (id) => ({
+    type: DELETE_MESSAGE,
+    id
 })
 
 export default dialogsReducer
