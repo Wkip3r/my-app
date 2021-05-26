@@ -1,15 +1,21 @@
 import React from "react";
 import Profile from "./Profile";
 import {connect} from "react-redux";
-import {editStatus, getStatus, setUserProfileThunk, updateStatus} from "../../redux/profileReducer";
-import {Redirect, withRouter} from "react-router";
+import {
+    editStatus,
+    getStatus,
+    setProfile,
+    setUserProfileThunk,
+    updateStatus
+} from "../../redux/profileReducer";
+import {withRouter} from "react-router";
 import {WithAuthRedirect} from "../../hoc/WithAuthRedirect";
 import {compose} from "redux";
 
 
 class ProfileContainer extends React.Component{
 
-    componentDidMount() {
+    refreshProfile() {
         let userId = this.props.match.params.userId
         if(!userId) {
             userId = this.props.userId
@@ -21,18 +27,35 @@ class ProfileContainer extends React.Component{
         this.props.getStatus(userId)
     }
 
+    componentDidMount() {
+        this.refreshProfile()
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if(this.props.match.params.userId !== prevProps.match.params.userId){
+            this.refreshProfile()
+        }
+
+        if(JSON.stringify(this.props.profile) !== JSON.stringify(prevProps.profile)){
+            this.refreshProfile()
+        }
+    }
+
     render () {
         return (
             <Profile {...this.props}
+                     isOwner={!this.props.match.params.userId}
                      profile={this.props.profile}
                      status={this.props.status}
                      updateStatus={this.props.updateStatus}
+                     savePhoto={this.props.savePhoto}
             />
         )
     }
 }
 
 const mapStateToProps = (state) => ({
+    id:state.auth.id,
     profile:state.profile.profile,
     isEditStatus: state.profile.isEditStatus,
     status: state.profile.status,
@@ -44,7 +67,8 @@ const mapDispatchToProps = {
     setUserProfile: setUserProfileThunk,
     editStatus,
     getStatus,
-    updateStatus
+    updateStatus,
+    setProfile
 }
 
 export default compose(

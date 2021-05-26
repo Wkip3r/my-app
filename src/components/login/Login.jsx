@@ -21,6 +21,10 @@ const LoginFrom = (props) => {
             <div>
                 <Field type={"checkbox"} name={"rememberMe"} component={Element("input")} /> remember me
             </div>
+            <div>
+                <Field name={"captcha"} component={"input"} />
+            </div>
+            {props.captchaUrl &&  <img src={props.captchaUrl} />}
             {props.error
                 ? <div className={styles.formSummeryError}> {props.error} </div>
                 : null}
@@ -44,10 +48,14 @@ class Login extends React.Component{
             return <Redirect to={"/profile"} />
         }
 
+        if(this.props.captchaUrl){
+            debugger
+        }
+
         return (
             <div>
                 <h1>LOGIN</h1>
-                <LoginReduxFrom onSubmit={this.onSubmit} />
+                <LoginReduxFrom onSubmit={this.onSubmit} captchaUrl={this.props.captchaUrl} />
             </div>
         )
     }
@@ -55,7 +63,8 @@ class Login extends React.Component{
 
 const mapStateToProps = (state) => ({
     form: state.form,
-    isAuth:state.auth.isAuth
+    isAuth:state.auth.isAuth,
+    captchaUrl: state.auth.captchaUrl
 })
 const mapDispatchToProps = { login, logout }
 

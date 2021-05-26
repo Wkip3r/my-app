@@ -7,7 +7,7 @@ import {Element} from "../common/FormsControls/FormsControls";
 import {maxLengthCreator, required} from "../../utils/validators/validators";
 
 
-class Dialogs extends React.Component{
+class Dialogs extends React.Component {
 
     addMessage = (formData) => {
        this.props.addMessage(formData.newMessageBody)
