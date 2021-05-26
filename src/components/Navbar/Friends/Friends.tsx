@@ -1,8 +1,10 @@
 import s from "./Friends.module.css"
+import {FriendType, NavbarReducerType} from "../../../redux/navbarReducer";
+import React from "react";
 import Friend from "./Friend/Friend";
 
 
-const Friends = (props) => {
+const Friends: React.FC<PropsType> = (props) => {
     return (
         <div className={s.friends}>
             <h2>Friends</h2>
@@ -12,5 +14,10 @@ const Friends = (props) => {
         </div>
     )
 }
+
+type PropsType = {
+    friendsData: Array<FriendType>
+}
+
 
 export default Friends

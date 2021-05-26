@@ -12,20 +12,31 @@ import {initializeApp} from "./redux/appReducer";
 import Preloader from "./components/common/preloader/preloader";
 import store from "./redux/reduxStore";
 import {compose} from "redux";
-import { LazyComponent, withLazyComponent, withSuspense } from './hoc/ReactLazy';
+import {LazyComponent, withLazyComponent, withSuspense} from './hoc/ReactLazy';
+import {Redirect, Switch} from "react-router";
 
 const DialogsConteiner = React.lazy(() => import('./components/Dialogs/DialogsConteiner'))
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'))
 const FindUsersComponent = React.lazy(() => import('./components/FindUsers/FindUsersComponent'))
 
 class App extends Component {
+    catchAllUnhaldedErrors = (reason,promiseRejectionEvent) => {
+        alert("Some error occured")
+        console.error(promiseRejectionEvent)
+    }
+
     componentDidMount() {
         this.props.initializeApp()
+        window.addEventListener("unhandledrejection", this.catchAllUnhaldedErrors)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("unhandledrejection", this.catchAllUnhaldedErrors)
     }
 
     render() {
-        if(!this.props.initialized){
-            return <Preloader />
+        if (!this.props.initialized) {
+            return <Preloader/>
         }
 
         return (
@@ -34,21 +45,29 @@ class App extends Component {
                     <HeaderContainer/>
                     <Navbar/>
                     <div className={style.appWrapperContent}>
-                        <Route path="/profile/:userId?"
-                            render={withSuspense(ProfileContainer)}
-                        />
-                        <Route path="/dialogs"
-                        render={withSuspense(DialogsConteiner)}
-                        />
-                        <Route path="/findUsers"
-                            render={withSuspense(FindUsersComponent)}
-                        />
-                        <Route path="/login">
-                            <Login/>
-                        </Route>
-                        <Route path="/news" component={News}/>
-                        <Route path="/music" component={Music}/>
-                        <Route path="/settings" component={Settings}/>
+                        <Switch>
+                            <Route exact path="/"
+                                   render={() => <Redirect to={"/Profile"} />} />
+                            <Route path="/profile/:userId?"
+                                   render={withSuspense(ProfileContainer)}
+                            />
+                            <Route path="/dialogs"
+                                   render={withSuspense(DialogsConteiner)}
+                            />
+                            <Route path="/findUsers"
+                                   render={withSuspense(FindUsersComponent)}
+                            />
+                            <Route path="/login">
+                                <Login/>
+                            </Route>
+
+                            <Route path="/news" component={News}/>
+                            <Route path="/music" component={Music}/>
+                            <Route path="/settings" component={Settings}/>
+
+                            <Route path="*"
+                                   render={() => <div>404</div>}/>
+                        </Switch>
                     </div>
                 </div>
             </BrowserRouter>
@@ -57,16 +76,16 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    initialized : state.app.initialized
+    initialized: state.app.initialized
 })
 
-let AppContainer = connect(mapStateToProps,{initializeApp},)(App)
+let AppContainer = connect(mapStateToProps, {initializeApp},)(App)
 
 const SamuraiJSApp = (props) => {
     return (
         <React.StrictMode>
             <Provider store={store}>
-                <AppContainer />
+                <AppContainer/>
             </Provider>
         </React.StrictMode>
     )

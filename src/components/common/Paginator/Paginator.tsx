@@ -1,13 +1,21 @@
 import styles from './Paginator.module.css'
-import {useState} from "react";
+import React, {DOMElement, useState} from "react";
 
-const Paginator = ({totalUsersCount, pageSize, currentPage, onPageChanged, portionSize = 10}) => {
+type PropsType = {
+    totalUsersCount: number
+    pageSize: number
+    currentPage: number
+    onPageChanged: (text:number, pageSize: number ) => void
+    portionSize: number
+}
+
+const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, currentPage, onPageChanged, portionSize = 10}) => {
     let pagesCount = Math.ceil(totalUsersCount / pageSize)
 
     let [currentPortion, setCurrentPortion] = useState(0)
 
-    const togglePage = (e) => {
-        onPageChanged(e.target.innerText, pageSize)
+    const togglePage = (e: any) => {
+        onPageChanged(+e.target.innerText, pageSize)
     }
 
     let portionPages = []
@@ -23,7 +31,8 @@ const Paginator = ({totalUsersCount, pageSize, currentPage, onPageChanged, porti
                 }
         }
 
-        let flatArray = portionPages.flat(Infinity)
+
+        let flatArray: Array<any> = portionPages.flat(Infinity)
 
         let difference = pagesCount - flatArray[flatArray.length - 1]
 
@@ -34,9 +43,9 @@ const Paginator = ({totalUsersCount, pageSize, currentPage, onPageChanged, porti
 
         portionPages.push(portion)
 
+
         return <div>
             <span>
-                <nobr>
                 <button onClick={() => {
                     setCurrentPortion(currentPortion - 1)}}
                     disabled={currentPortion === 0}>Prev</button>
@@ -47,7 +56,6 @@ const Paginator = ({totalUsersCount, pageSize, currentPage, onPageChanged, porti
                 <button onClick={() => {
                     setCurrentPortion(currentPortion + 1)}}
                     disabled={currentPortion === portionPages.length - 1}>Next</button>
-                    </nobr>
             </span>
         </div>
 

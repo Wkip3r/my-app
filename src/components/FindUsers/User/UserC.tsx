@@ -1,8 +1,10 @@
 import React from "react";
 import style from "./User.module.css";
 import {NavLink} from "react-router-dom";
+import {User} from "../../../ReducerTypes/FindUserReducerTypes";
 
-const UserComponent = (props) => {
+
+const UserComponent: React.FC<PropsTypes> = (props) => {
 
     const onToggleFollow = () => {
         props.user.followed ? props.follow(props.user.id) : props.unfollow(props.user.id)
@@ -25,11 +27,18 @@ const UserComponent = (props) => {
             <div className={style.userWrapper}>
                 <span className={style.name}>{props.user.name}</span>
                 <span className={style.description}>{props.user.status}</span>
-                <span className={style.country}>{props.user.country}</span>
-                <span className={style.city}>{props.user.city}</span>
             </div>
         </div>
     )
+}
+
+type PropsTypes = {
+    user: User
+    followingInProgress: Array<number>
+    onToggleFollow: (id:number) => void
+    toggleIsFollowingProgress: (followingInProgress: boolean, userId: number) => void
+    follow: (userId: number) => void
+    unfollow: (userId: number) => void
 }
 
 export default UserComponent

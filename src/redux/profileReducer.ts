@@ -1,21 +1,20 @@
 import {profileAPI, usersAPI} from "../api/api";
+import {
+    ADD_POST, AddPostActionCreator, DELETE_POST, DeletePostActionCreator, EDIT_STATUS, EditStatus,
+    ProfileInfo,
+    ProfileReducerInitialState, SET_STATUS, SET_USER_PROFILE, SetStatusType, SetUserProfileType,
+    TOGGLE_FETCHING
+} from "../ReducerTypes/ProfileReducerTypes";
 
-const ADD_POST = "ADD_POST"
-const UPDATE_NEW_POST_TEXT = 'UPDATE_NEW_POST_TEXT'
-const TOGGLE_FETCHING = "TOGGLE_FETCHING"
-const SET_USER_PROFILE = "SET_USER_PROFILE"
-const EDIT_STATUS = "EDIT_STATUS"
-const SET_STATUS = "SET_STATUS"
-const DELETE_POST = "DELETE_POST"
 
-let initialState = {
+let initialState: ProfileReducerInitialState = {
     postsData:
         [
-            {id: 1, message: "Hi, how are you?", likesCount: "20"},
-            {id: 2, message: "It my first post", likesCount: "2"},
-            {id: 3, message: "Apolo", likesCount: "1"},
-            {id: 4, message: "GraphQL", likesCount: "34"},
-            {id: 5, message: "Ant Design", likesCount: "45"},
+            {id: 1, message: "Hi, how are you?", likesCount: 20},
+            {id: 2, message: "It my first post", likesCount: 2},
+            {id: 3, message: "Apolo", likesCount: 1},
+            {id: 4, message: "GraphQL", likesCount: 34},
+            {id: 5, message: "Ant Design", likesCount: 45},
         ],
     profile: null,
     isFetching: false,
@@ -23,7 +22,8 @@ let initialState = {
     status: 'Edit Status'
 }
 
-const profileReducer = (state = initialState, action) => {
+
+const profileReducer = (state = initialState, action: any) => {
     switch (action.type) {
         case ADD_POST:
             return (
@@ -39,11 +39,6 @@ const profileReducer = (state = initialState, action) => {
                             }
                         ]
                 })
-        case UPDATE_NEW_POST_TEXT:
-            return {
-                ...state,
-                newPostText: action.text
-            }
         case TOGGLE_FETCHING:
             return {
                 ...state,
@@ -64,43 +59,56 @@ const profileReducer = (state = initialState, action) => {
     return state
 }
 
-export const setUserProfile = (profile) => ({
+export const setUserProfile = (profile: ProfileInfo) => ({
     type: SET_USER_PROFILE,
     profile: profile
 })
 
-export const setStatus = (status) => ({
+export const setStatus = (status: string) => ({
     type: SET_STATUS,
     status: status
 })
 
-export const getStatus = (userId) => async (dispatch) => {
+export const getStatus = (userId: number) => async (dispatch: any) => {
     let response = await profileAPI.getStatus(userId)
 
     dispatch(setStatus(response.data))
 }
 
-export const addPostActionCreator = (postText) => ({
+export const addPostActionCreator = (postText: string) => ({
     type: ADD_POST,
     text: postText
 })
 
-export const deletePostActionCreator = (postId) => ({
+export const deletePostActionCreator = (postId: number) => ({
     type: DELETE_POST,
     id: postId
 })
 
-export const editStatus = (isEdit) => ({
+export const editStatus = (isEdit: boolean) => ({
     type: EDIT_STATUS,
     isEdit: isEdit
 })
 
-export const updateStatus = (status) => async (dispatch) => {
-    let response = await profileAPI.updateStatus(status)
-    dispatch(setStatus(status))
+export const updateStatus = (status:string) => async (dispatch: any) => {
+    try {
+        let response = await profileAPI.updateStatus(status)
+
+        dispatch(setStatus(status))
+    } catch (error) {
+
+    }
 }
 
-export const setUserProfileThunk = (userId) => async (dispatch) => {
+export const setProfile = (profileInfo: ProfileInfo) => async (dispatch: any) => {
+    let response = await profileAPI.setProfile(profileInfo)
+
+    if(response.data.resultCode === 0){
+        setUserProfileThunk(profileInfo.userId)
+    }
+}
+
+export const setUserProfileThunk = (userId: number) => async (dispatch: any) => {
     let response = await usersAPI.setUserProfile(userId)
     dispatch(setUserProfile(response))
 }
